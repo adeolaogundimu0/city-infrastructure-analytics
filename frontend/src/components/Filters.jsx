@@ -71,7 +71,7 @@ export default function Filters({
 
   function onEpsChange(v) {
     // eps in km; 
-    const cleaned = v === '' ? '' : clampNumber(v, 0.01, 5)
+    const cleaned = v === '' ? '' : clampNumber(v, 0.5, 100)
     setEpsKm(cleaned)
   }
 
@@ -144,12 +144,12 @@ export default function Filters({
           <input
             className="input"
             type="number"
-            step="0.01"
-            min="0.01"
-            max="5"
+            step="0.5"
+            min="0.5"
+            max="100"
             value={epsKm}
             onChange={(e) => onEpsChange(e.target.value)}
-            placeholder="0.15"
+            placeholder="2"
           />
           <div className="hint">
             {epsKm ? (
@@ -163,7 +163,7 @@ export default function Filters({
         </div>
 
         <div style={{ minWidth: 0 }}>
-          <label className="label">Min Points</label>
+          <label className="label">{"Min Points (>=2)"}</label>
           <input
             className="input"
             type="number"

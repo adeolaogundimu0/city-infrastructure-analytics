@@ -5,6 +5,11 @@ import HotspotMap from './components/HotspotMap.jsx'
 import TopTypesChart from './components/TopTypesChart.jsx'
 import { getJSON, buildQuery } from './api/client.js'
 
+const BACKEND_BASE = 'https://city-infrastructure-analytics.onrender.com'
+
+
+
+
 // Keep a shared palette so the map + chart match.
 const PALETTE = [
   '#60a5fa', '#fb923c', '#f87171', '#34d399', '#a78bfa',
@@ -21,6 +26,8 @@ function buildColorMapFromTypes(typeList) {
 }
 
 export default function App() {
+
+  const [backendReady, setBackendReady] = useState(false)
   // DBSCAN-only mode now
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
@@ -133,6 +140,18 @@ export default function App() {
   }, [from, to])
 
   useEffect(() => {
+  fetch(`${BACKEND_BASE}/health`, { cache: 'no-store' })
+    .then(() => {
+      setBackendReady(true)
+      console.log('Backend is ready')
+    })
+    .catch(() => {
+      console.log('Backend still starting')
+    })
+}, [])
+
+
+  useEffect(() => {
     refreshMeta()
   }, [refreshMeta])
 
@@ -151,6 +170,21 @@ export default function App() {
           <h1 style={{ marginTop: 0 , textAlign: 'center' , fontSize: '1.8rem', color: '#2e6f40'}}>
             Ottawa 311 Hotspot Explorer (Density Based Scanning)
           </h1>
+          {!backendReady && (
+          <div className="hint" style={{ marginTop: 8, marginBottom: 12 }}>
+            <b>Backend startup:</b> The backend is hosted on Render and may take up to <b>50 seconds</b> to wake up.
+            If the map or charts are empty, click{' '}
+            <a
+              href={`${BACKEND_BASE}/health`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              this link
+            </a>{' '}
+            to start it, then return here.
+          </div>
+        )}
+
 
           <Filters
             from={from}
