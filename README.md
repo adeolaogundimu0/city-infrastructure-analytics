@@ -14,6 +14,8 @@ Key Features
 - Date range filtering and multi-select service types
 - Visual distinction for request types without sufficient coordinates
 
+
+
   
 Tech Stack
 Frontend: React (Vite), Leaflet, Recharts
@@ -21,6 +23,8 @@ Frontend: React (Vite), Leaflet, Recharts
 Backend: Node.js, Express, PostgreSQL (Supabase), PostGIS
 
 Data Source: City of Ottawa Open Data – 311 Current Year
+
+
 
 API Endpoints
 
@@ -33,6 +37,8 @@ GET /api/analytics/top-types
 GET /api/analytics/date-range
 
 GET /api/analytics/type-location-coverage
+
+
 
 
 Local Setup
@@ -54,6 +60,8 @@ DB_SSL=true
 PORT=5000
 
 
+
+
 Backend
 
 cd backend
@@ -65,6 +73,8 @@ npm start
 npm run etl
 
 
+
+
 Frontend
 
 cd frontend
@@ -72,6 +82,8 @@ cd frontend
 npm install
 
 npm run dev
+
+
 
 
 Deployment Notes
