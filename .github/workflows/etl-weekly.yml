@@ -1,0 +1,39 @@
+name: Weekly Ottawa 311 ETL
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    # Sundays at 07:00 UTC = 2:00 AM America/Montreal (during standard time)
+    # If daylight savings is active, that becomes 3:00 AM local.
+    - cron: "0 7 * * 0"
+
+jobs:
+  run-etl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Run ETL (upsert current-year CSV)
+        working-directory: backend
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_SSL: ${{ secrets.DB_SSL }}
+        run: npm run etl

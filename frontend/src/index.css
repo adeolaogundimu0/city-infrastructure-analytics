@@ -1,0 +1,195 @@
+:root {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  line-height: 1.4;
+}
+
+* {
+  box-sizing: border-box; /* ✅ prevents overflow/clipping surprises */
+}
+
+body {
+  margin: 0;
+  background: #0b0f14;
+  color: #e8eef6;
+}
+
+.page {
+  padding: 18px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: #111826;
+  border: 1px solid #24324a;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* two-column grids used for From/To and parameter fields */
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* allows grid children to shrink instead of overflowing */
+.grid2 > div {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .grid2 { grid-template-columns: 1fr; }
+}
+
+.label {
+  display: block;
+  font-size: 12px;
+  opacity: 0.9;
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 10px;
+  border-radius: 10px;
+  border: 1px solid #2a3b57;
+  background: #0d1422;
+  color: #e8eef6;
+  box-sizing: border-box;
+}
+
+/* Date input: reserve space for calendar icon so text never overlaps it */
+input[type="date"].input {
+  padding-right: 46px;
+  height: 52px;       /* slightly cleaner/consistent height */
+  font-size: 18px;    /* adjust to taste (16–18 is good) */
+}
+
+/* Make the date picker icon white + not flush against the edge */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.85;
+  cursor: pointer;
+  margin-right: 6px;
+}
+
+
+input[type="number"].input,
+select.input {
+  height: 52px;
+  font-size: 18px;
+}
+
+.btn {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #2a3b57;
+  background: #0d1422;
+  color: #e8eef6;
+  cursor: pointer;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;        /* vertical centering */
+  justify-content: center;    /* horizontal centering */
+  gap: 10px;
+
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid #2a3b57;
+  background: #0d1422;
+  cursor: pointer;
+
+  line-height: 1;            
+  text-align: center;
+}
+
+.pill input[type="checkbox"] {
+  margin: 0;
+}
+
+
+.hint {
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.error {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #2a0f17;
+  border: 1px solid #6a2034;
+  color: #ffd7df;
+  margin-bottom: 14px;
+}
+
+/* Equal split for map + chart */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr; }
+}
+
+/* Type selector: taller and optionally 2-column */
+.typeSelect {
+  height: 220px;            /* tall enough for your current types */
+  min-height: 220px;
+}
+
+/* If types grow later: show options in 2 columns (still native select) */
+.typeSelect--twoCol {
+  columns: 2;
+  column-gap: 18px;
+}
+
+/* Prevent overlap/falling off in small widths */
+@media (max-width: 900px) {
+  .typeSelect,
+  .typeSelect--twoCol {
+    columns: 1;
+    height: 240px;
+  }
+}
+
+/* Make date picker icon white-ish */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.9;
+}
+
+/* Smart height for the multi-select:
+   - small when few items
+   - still allows plenty of room when lots of items */
+.typeSelect {
+  height: auto;
+  min-height: 90px;
+  max-height: 240px;
+}
+
+
+.typeSelect {
+  overflow-y: auto;
+}
+
+
+
+

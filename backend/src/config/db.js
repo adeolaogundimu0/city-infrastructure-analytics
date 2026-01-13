@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
-// Always load .env from the project root (one level above /backend)
+
 dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
 
 import pkg from 'pg';

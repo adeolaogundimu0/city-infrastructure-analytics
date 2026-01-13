@@ -246,7 +246,7 @@ async function ingest() {
       fs.unlinkSync(csvPath);
     } catch {}
 
-    // IMPORTANT: close pool when running as a one-off script
+    
     await pool.end();
   }
 }
