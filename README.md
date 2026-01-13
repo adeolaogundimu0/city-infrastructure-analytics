@@ -38,7 +38,6 @@ Backend
 cd backend
 npm install
 npm start
-Run ETL
 npm run etl
 
 Frontend
