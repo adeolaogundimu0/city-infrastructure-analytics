@@ -1,6 +1,11 @@
-export async function getJSON(url) {
-  const res = await fetch(url)
-  if (!res.ok) throw new Error(`Request failed ${res.status}: ${url}`)
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL || '' // empty = same-origin (dev proxy)
+
+export async function getJSON(path) {
+  const res = await fetch(`${API_BASE}${path}`)
+  if (!res.ok) {
+    throw new Error(`Request failed ${res.status}: ${path}`)
+  }
   return res.json()
 }
 
