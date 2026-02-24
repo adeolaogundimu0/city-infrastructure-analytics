@@ -1,39 +1,80 @@
-name: Weekly Ottawa 311 ETL
+name: Ottawa 311 ETL & Supabase Keep-Alive
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+
   schedule:
-    # Sundays at 07:00 UTC = 2:00 AM America/Montreal (during standard time)
-    # If daylight savings is active, that becomes 3:00 AM local.
-    - cron: "0 7 * * 0"
+    # Daily keep-alive at 07:00 UTC (2 AM Ottawa standard, 3 AM daylight)
+    - cron: "0 7 * * *"
+
+    # Weekly ETL Sundays at 07:10 UTC
+    - cron: "10 7 * * 0"
+
+concurrency:
+  group: ottawa-311-etl
+  cancel-in-progress: false
 
 jobs:
-  run-etl:
+  etl-and-keepalive:
+
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+
+    timeout-minutes: 20
+
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_SSL: ${{ secrets.DB_SSL }}
+
+    defaults:
+      run:
+        working-directory: backend
 
     steps:
-      - name: Checkout repo
+
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
-          cache: "npm"
+          node-version: 22
+          cache: npm
           cache-dependency-path: backend/package-lock.json
 
       - name: Install dependencies
-        working-directory: backend
-        run: npm ci
+        run: npm ci --omit=dev
 
-      - name: Run ETL (upsert current-year CSV)
-        working-directory: backend
-        env:
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_SSL: ${{ secrets.DB_SSL }}
-        run: npm run etl
+      # Keep Supabase awake
+      - name: Supabase keep-alive
+        run: |
+          echo "Running keep-alive query..."
+          node scripts/keepAlive.js
+
+      # Retry keep-alive once if Supabase was sleeping
+      - name: Retry keep-alive if needed
+        if: failure()
+        run: |
+          echo "Retrying after 15 seconds..."
+          sleep 15
+          node scripts/keepAlive.js
+
+      # Only run ETL on Sunday cron
+      - name: Run ETL job
+        if: github.event.schedule == '10 7 * * 0'
+        run: |
+          echo "Starting ETL..."
+          npm run etl
+
+      - name: ETL success confirmation
+        if: success()
+        run: echo "Workflow completed successfully"
+
+      - name: ETL failure alert
+        if: failure()
+        run: |
+          echo "ETL failed"
+          exit 1
