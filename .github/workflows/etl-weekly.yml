@@ -6,7 +6,7 @@ on:
 
   schedule:
     # Daily keep-alive at 07:00 UTC (2 AM Ottawa standard, 3 AM daylight)
-    - cron: "0 7 * * *"
+    - cron: "*/20 * * * *"   # every 20 minutes
 
     # Weekly ETL Sundays at 07:10 UTC
     - cron: "10 7 * * 0"
