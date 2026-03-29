@@ -6,7 +6,7 @@ on:
 
   schedule:
     # Daily keep-alive at 07:00 UTC (2 AM Ottawa standard, 3 AM daylight)
-    - cron: "*/20 * * * *"   # every 20 minutes
+    - cron: "*/15 * * * *"   # every 15 minutes
 
     # Weekly ETL Sundays at 07:10 UTC
     - cron: "10 7 * * 0"
@@ -20,7 +20,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    timeout-minutes: 20
+    timeout-minutes: 15
 
     env:
       DB_HOST: ${{ secrets.DB_HOST }}
